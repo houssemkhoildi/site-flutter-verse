@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -62,13 +61,6 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				},
-				flutter: {
-					'blue': '#027DFD',
-					'light-blue': '#42A5F5',
-					'dark-blue': '#0B2C3D',
-					'secondary': '#025095',
-					'tertiary': '#01579B'
 				}
 			},
 			borderRadius: {
@@ -92,34 +84,11 @@ export default {
 					to: {
 						height: '0'
 					}
-				},
-				'float': {
-					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-10px)' }
-				},
-				'slide-in': {
-					'0%': { transform: 'translateX(-100%)', opacity: '0' },
-					'100%': { transform: 'translateX(0)', opacity: '1' }
-				},
-				'fade-in': {
-					'0%': { opacity: '0' },
-					'100%': { opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'float': 'float 3s ease-in-out infinite',
-				'slide-in': 'slide-in 0.5s ease-out',
-				'fade-in': 'fade-in 1s ease-out'
-			},
-			fontFamily: {
-				'poppins': ['Poppins', 'sans-serif'],
-				'inter': ['Inter', 'sans-serif']
-			},
-			backgroundImage: {
-				'flutter-gradient': 'linear-gradient(90deg, #42A5F5 0%, #2196F3 100%)',
-				'flutter-dark-gradient': 'linear-gradient(90deg, #0B2C3D 0%, #01579B 100%)'
+				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
 	},
