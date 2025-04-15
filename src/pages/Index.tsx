@@ -37,7 +37,8 @@ const Index = () => {
             <FeatureCard 
               icon={Zap} 
               title="Fast Development" 
-              description="Hot reload helps you quickly and easily experiment, build UIs, add features, and fix bugs." 
+              description="Hot reload helps you quickly and easily experiment, build UIs, add features, and fix bugs."
+              link="/dashboard"
             />
             <FeatureCard 
               icon={Smartphone} 
