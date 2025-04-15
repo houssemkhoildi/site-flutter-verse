@@ -3,10 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +27,11 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   return (
     <nav 
       className={cn(
@@ -31,9 +40,9 @@ const Navbar: React.FC = () => {
       )}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <a href="#" className="flex items-center">
+        <a href="/" className="flex items-center">
           <span className="font-poppins font-bold text-2xl bg-clip-text text-transparent bg-flutter-gradient">
-            FlutterVerse
+            houdev.tech
           </span>
         </a>
         
@@ -48,9 +57,31 @@ const Navbar: React.FC = () => {
           <a href="#tech" className="font-medium text-flutter-dark-blue hover:text-flutter-blue transition-colors">
             Tech Stack
           </a>
-          <Button className="bg-flutter-blue hover:bg-flutter-secondary transition-colors">
-            Get Started
-          </Button>
+          {user ? (
+            <>
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/dashboard')}
+                className="text-flutter-dark-blue hover:text-flutter-blue"
+              >
+                Dashboard
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleSignOut}
+                className="border-flutter-blue text-flutter-blue hover:bg-flutter-blue/10"
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button 
+              className="bg-flutter-blue hover:bg-flutter-secondary transition-colors"
+              onClick={() => navigate('/auth')}
+            >
+              Sign In
+            </Button>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -72,9 +103,40 @@ const Navbar: React.FC = () => {
             <a onClick={toggleMenu} href="#tech" className="font-medium text-flutter-dark-blue hover:text-flutter-blue transition-colors py-2">
               Tech Stack
             </a>
-            <Button className="bg-flutter-blue hover:bg-flutter-secondary transition-colors w-full">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => {
+                    navigate('/dashboard');
+                    toggleMenu();
+                  }}
+                  className="text-flutter-dark-blue hover:text-flutter-blue justify-start"
+                >
+                  Dashboard
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    handleSignOut();
+                    toggleMenu();
+                  }}
+                  className="border-flutter-blue text-flutter-blue hover:bg-flutter-blue/10 w-full"
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button 
+                className="bg-flutter-blue hover:bg-flutter-secondary transition-colors w-full"
+                onClick={() => {
+                  navigate('/auth');
+                  toggleMenu();
+                }}
+              >
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       )}
