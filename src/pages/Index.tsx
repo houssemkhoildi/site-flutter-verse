@@ -10,11 +10,11 @@ const Index = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // Simple health check using Supabase
-        const { data, error } = await supabase.from('_lovalbe_health_check').select('*').maybeSingle();
+        // Use a simple health check that doesn't require a specific table
+        const { data, error } = await supabase.auth.getSession();
         
-        if (!error || error.code === 'PGRST116') {
-          // Connection successful (PGRST116 means relation doesn't exist, which is fine)
+        if (!error) {
+          // Connection successful
           setIsConnected(true);
           toast({
             title: "Supabase Connected",
