@@ -1,5 +1,7 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import FeatureCard from '@/components/FeatureCard';
@@ -8,16 +10,65 @@ import TechStack from '@/components/TechStack';
 import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
 import { Zap, Code, Smartphone, Palette, RotateCcw, Award } from 'lucide-react';
+import { toast } from 'sonner';
 
-const Index = () => {
-  // Add scroll to top on page load
+const Index: React.FC = () => {
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+
   useEffect(() => {
+    // Add scroll to top on page load
     window.scrollTo(0, 0);
+
+    // Test Supabase connection
+    const testConnection = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .limit(1);
+
+        if (error) {
+          setConnectionStatus('error');
+          toast.error('Supabase Connection Error', {
+            description: error.message
+          });
+        } else {
+          setConnectionStatus('connected');
+          toast.success('Supabase Connected', {
+            description: 'Successfully connected to the project'
+          });
+        }
+      } catch (err) {
+        setConnectionStatus('error');
+        toast.error('Supabase Connection Failed', {
+          description: String(err)
+        });
+      }
+    };
+
+    testConnection();
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      
+      {connectionStatus === 'connecting' && (
+        <div className="fixed top-4 right-4 z-50">
+          <Button variant="outline" disabled>
+            Connecting to Supabase...
+          </Button>
+        </div>
+      )}
+
+      {connectionStatus === 'error' && (
+        <div className="fixed top-4 right-4 z-50">
+          <Button variant="destructive" onClick={() => window.location.reload()}>
+            Connection Failed - Retry
+          </Button>
+        </div>
+      )}
+
       <HeroSection />
       
       {/* Features Section */}
