@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 
 const Index = () => {
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
@@ -39,10 +41,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Supabase + React App</h1>
-          
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Supabase + React App</CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="mb-6">
             <div className="flex items-center">
               <div className={`w-3 h-3 rounded-full mr-2 ${
@@ -57,14 +60,15 @@ const Index = () => {
           </div>
 
           <p className="text-gray-600 mb-4">
-            You're now ready to start building with Supabase and React!
+            You're ready to start building with Supabase and React!
           </p>
-
-          <p className="text-sm text-gray-500">
-            Edit <code className="bg-gray-100 p-1 rounded">src/pages/Index.tsx</code> to customize this page.
-          </p>
-        </div>
-      </div>
+        </CardContent>
+        <CardFooter>
+          <Button variant="outline" onClick={() => window.location.reload()}>
+            Refresh Connection
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
