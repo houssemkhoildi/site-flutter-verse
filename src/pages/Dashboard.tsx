@@ -1,68 +1,98 @@
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import Layout from "@/components/Layout";
+import React, { useState } from 'react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, Layout, Layers, Settings, Smartphone, Monitor, Tablet, Search, Plus, X, Save, Eye } from 'lucide-react';
+import ElementsSidebar from '@/components/dashboard/ElementsSidebar';
+import EditorCanvas from '@/components/dashboard/EditorCanvas';
+import PropertyPanel from '@/components/dashboard/PropertyPanel';
+import { Separator } from '@/components/ui/separator';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
+  const [zoom, setZoom] = useState(90);
+
   return (
-    <Layout>
-      <div className="space-y-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Projects</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">12</p>
-              <p className="text-sm text-gray-500">Total projects</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Tutorials</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">24</p>
-              <p className="text-sm text-gray-500">Completed tutorials</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Bookmarks</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">8</p>
-              <p className="text-sm text-gray-500">Saved resources</p>
-            </CardContent>
-          </Card>
+    <div className="h-screen flex flex-col bg-slate-900 text-slate-100">
+      {/* Top Navigation Bar */}
+      <div className="h-12 bg-slate-800 border-b border-slate-700 flex items-center px-3 justify-between">
+        <div className="flex items-center space-x-3">
+          <a href="/" className="flex items-center">
+            <span className="font-poppins font-bold text-xl bg-clip-text text-transparent bg-flutter-gradient">
+              FlutterVerse
+            </span>
+          </a>
+          <Separator orientation="vertical" className="h-6 bg-slate-700" />
+          <span className="text-sm font-medium">My Project</span>
         </div>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="border-b pb-2">
-                <p className="font-medium">Completed "State Management" tutorial</p>
-                <p className="text-sm text-gray-500">Yesterday at 2:30 PM</p>
-              </div>
-              <div className="border-b pb-2">
-                <p className="font-medium">Started "Flutter Animations" course</p>
-                <p className="text-sm text-gray-500">Apr 14, 2025 at 10:15 AM</p>
-              </div>
-              <div className="border-b pb-2">
-                <p className="font-medium">Bookmarked "Flutter Architecture" article</p>
-                <p className="text-sm text-gray-500">Apr 12, 2025 at 4:45 PM</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 bg-slate-700 rounded-md px-2 py-1">
+            <Smartphone 
+              size={16} 
+              className={`cursor-pointer ${selectedDevice === 'mobile' ? 'text-flutter-blue' : 'text-slate-400'}`} 
+              onClick={() => setSelectedDevice('mobile')}
+            />
+            <Tablet 
+              size={16} 
+              className={`cursor-pointer ${selectedDevice === 'tablet' ? 'text-flutter-blue' : 'text-slate-400'}`} 
+              onClick={() => setSelectedDevice('tablet')}
+            />
+            <Monitor 
+              size={16} 
+              className={`cursor-pointer ${selectedDevice === 'desktop' ? 'text-flutter-blue' : 'text-slate-400'}`} 
+              onClick={() => setSelectedDevice('desktop')}
+            />
+          </div>
+          
+          <div className="flex items-center space-x-1 bg-slate-700 rounded-md px-2 py-1">
+            <button onClick={() => setZoom(Math.max(10, zoom - 10))} className="text-slate-400 hover:text-white">-</button>
+            <span className="text-xs w-8 text-center">{zoom}%</span>
+            <button onClick={() => setZoom(Math.min(200, zoom + 10))} className="text-slate-400 hover:text-white">+</button>
+          </div>
+          
+          <Button size="sm" variant="outline" className="bg-slate-700 border-slate-600 text-white hover:bg-slate-600">
+            <Eye size={15} className="mr-1" />
+            Preview
+          </Button>
+          
+          <Button size="sm" className="bg-flutter-blue hover:bg-flutter-blue/90">
+            <Save size={15} className="mr-1" />
+            Save
+          </Button>
+        </div>
       </div>
-    </Layout>
+
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden">
+        <ResizablePanelGroup direction="horizontal">
+          {/* Left sidebar */}
+          <ResizablePanel 
+            defaultSize={20} 
+            minSize={collapsed ? 5 : 15} 
+            maxSize={collapsed ? 5 : 30} 
+            className={collapsed ? "min-w-[50px] w-[50px]" : ""}
+          >
+            <ElementsSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+          </ResizablePanel>
+          
+          <ResizableHandle withHandle />
+          
+          {/* Main editor area */}
+          <ResizablePanel defaultSize={55}>
+            <EditorCanvas zoom={zoom} deviceType={selectedDevice} />
+          </ResizablePanel>
+          
+          <ResizableHandle withHandle />
+          
+          {/* Property panel */}
+          <ResizablePanel defaultSize={25}>
+            <PropertyPanel />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    </div>
   );
 };
 
